@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light only">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>HHFD Hydraulics</title>
+<style>
+:root{--bg:#F5F4EF;--navy:#2B3A52;--amber:#D4860B;--teal:#3D7A6F;--danger:#C0392B;--ink:#1A1A2E;--tint:rgba(43,58,82,.07);--line:rgba(43,58,82,.28)}
+html{color-scheme:light only;background:#F5F4EF !important;-webkit-text-size-adjust:100%}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:#F5F4EF !important;color:var(--ink);font:16px/1.35 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  padding:env(safe-area-inset-top) max(14px,env(safe-area-inset-right)) calc(28px + env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+main{max-width:760px;margin:0 auto}
+header{padding:14px 2px 10px;display:flex;align-items:flex-end;justify-content:space-between;gap:10px}
+h1{margin:0;font-size:22px;line-height:1.15;color:var(--navy)}
+h1 small{display:block;font-size:13px;font-weight:600;color:var(--teal);letter-spacing:.04em;text-transform:uppercase;margin-bottom:2px}
+#toggle{appearance:none;border:1.5px solid var(--navy);background:transparent;color:var(--navy);font:600 14px/1 inherit;padding:11px 14px;border-radius:10px;min-height:44px;cursor:pointer}
+#toggle:active{background:var(--tint)}
+.sec{border:1.5px solid var(--navy);border-radius:12px;margin:0 0 10px;overflow:hidden;background:var(--bg)}
+.sec>summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:12px 14px;min-height:56px;background:var(--navy);color:#fff}
+.sec>summary::-webkit-details-marker{display:none}
+.num{flex:none;width:26px;height:26px;border-radius:50%;background:#fff;color:var(--navy);font:700 14px/26px inherit;text-align:center}
+.st{flex:1;min-width:0;display:flex;flex-direction:column}
+.t{font-weight:700;font-size:17px;line-height:1.2}
+.s{font-size:12.5px;opacity:.85;margin-top:2px}
+.chev{flex:none;width:11px;height:11px;border-right:3px solid var(--amber);border-bottom:3px solid var(--amber);transform:rotate(45deg);transition:transform .15s;margin:-4px 4px 0 0}
+.sec[open]>summary .chev{transform:rotate(-135deg);margin-top:4px}
+.body{padding:12px 12px 14px;border-top:0}
+h3{margin:14px 0 6px;font-size:13px;letter-spacing:.05em;text-transform:uppercase;color:var(--teal)}
+h3:first-child{margin-top:2px}
+.lines{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.line{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1.5px solid var(--line);border-left:6px solid var(--teal);border-radius:10px;padding:10px 12px;background:var(--tint)}
+.line-main{min-width:0}
+.line-name{font-weight:800;font-size:19px;color:var(--navy)}
+.len{font-weight:700;color:var(--ink)}
+.line-tip{font-size:14.5px;margin-top:1px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.chips span{font-size:13px;font-weight:600;border:1px solid var(--line);border-radius:6px;padding:2px 7px;background:var(--bg)}
+.pdp{flex:none;text-align:right;line-height:1}
+.pdp-num{display:block;font-size:44px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.pdp-unit{font-size:13px;font-weight:700;letter-spacing:.06em;color:var(--navy)}
+.flag{display:inline-block;margin-left:8px;vertical-align:middle;background:var(--amber);color:var(--ink);font:700 11px/1 inherit;text-transform:uppercase;letter-spacing:.05em;padding:3px 6px;border-radius:5px}
+.note{font-size:13.5px;margin:10px 2px 0}
+.tw{overflow-x:auto;border:1.5px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:9px 10px;text-align:center;font-size:16px;border-bottom:1px solid var(--line)}
+tr:last-child>th,tr:last-child>td{border-bottom:0}
+thead th,.fl tr:first-child th,.kv tr:first-child th{background:var(--navy);color:#fff;font-size:14px;font-weight:700}
+.fl tbody th,.fl th[scope=row]{background:var(--tint);color:var(--navy);font-weight:800}
+.fl tr:nth-child(even) td{background:var(--tint)}
+.fl td{font-weight:600}
+.na{color:var(--ink);opacity:.45}
+.tipcol{text-align:left;font-size:13px;min-width:120px;font-weight:600}
+.fl tr:first-child .tipcol{text-align:left}
+.kv td,.kv th{text-align:left}
+.kv tr:nth-child(even) td{background:var(--tint)}
+.kv td.r,.kv th.r{text-align:right;font-weight:700;color:var(--navy)}
+.kv tr:first-child th.r{color:#fff}
+.big{font-weight:800;color:var(--navy);white-space:nowrap}
+.callout{margin:0 0 4px;padding:10px 12px;border-left:6px solid var(--amber);background:var(--tint);border-radius:6px;font-size:16px}
+.callout+h3{margin-top:14px}
+.formula{font-size:17px}
+footer{font-size:12.5px;margin:14px 2px 0;opacity:.85}
+@media (max-width:380px){.pdp-num{font-size:38px}.line-name{font-size:17px}}
+@media print{.sec{break-inside:avoid}#toggle{display:none}}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <h1><small>Huber Heights Fire Division</small>Hydraulics Quick Reference</h1>
+  <button id="toggle" type="button">Expand all</button>
+</header>
+<details class="sec" open>
+<summary><span class="num">1</span><span class="st"><span class="t">Crosslays — Pump Pressure</span><span class="s">Combat Ready (CBR) · 1¾″ &amp; 2″</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><ul class="lines"><li class="line" data-gpm="205" data-fl="64" data-np="60" data-pdp="124" data-len="200">
+  <div class="line-main">
+    <div class="line-name">1¾″ <span class="len">200′</span></div>
+    <div class="line-tip">Vortex 15/16″ SB</div>
+    <div class="chips"><span>205 GPM</span><span>FL 64</span><span>NP 60</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">124</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="175" data-fl="20" data-np="75" data-pdp="95" data-len="100">
+  <div class="line-main">
+    <div class="line-name">1¾″ <span class="len">100′</span></div>
+    <div class="line-tip">175 GPM @ 75 PSI</div>
+    <div class="chips"><span>175 GPM</span><span>FL 20</span><span>NP 75</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">95</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="265" data-fl="57" data-np="50" data-pdp="107" data-len="150">
+  <div class="line-main">
+    <div class="line-name">2″ <span class="len">150′</span></div>
+    <div class="line-tip">1⅛″ SB</div>
+    <div class="chips"><span>265 GPM</span><span>FL 57</span><span>NP 50</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">107</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="265" data-fl="114" data-np="50" data-pdp="164" data-len="300">
+  <div class="line-main">
+    <div class="line-name">2″ <span class="len">300′</span></div>
+    <div class="line-tip">1⅛″ SB</div>
+    <div class="chips"><span>265 GPM</span><span>FL 114</span><span>NP 50</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">164</span><span class="pdp-unit">PSI</span></div>
+</li></ul><p class='note'>PDP = NP + FL. FL is the total for the line length shown.</p></div>
+</details><details class="sec">
+<summary><span class="num">2</span><span class="st"><span class="t">2½″ Lines — Pump Pressure</span><span class="s">150′ &amp; 300′</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><ul class="lines"><li class="line" data-gpm="325" data-fl="37" data-np="50" data-pdp="87" data-len="150">
+  <div class="line-main">
+    <div class="line-name">2½″ <span class="len">150′</span></div>
+    <div class="line-tip">1¼″ SB</div>
+    <div class="chips"><span>325 GPM</span><span>FL 37</span><span>NP 50</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">87</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="325" data-fl="72" data-np="50" data-pdp="122" data-len="300">
+  <div class="line-main">
+    <div class="line-name">2½″ <span class="len">300′</span><span class='flag' title='FL on this quick-reference line does not match the friction loss table. Verify against the source.'>check</span></div>
+    <div class="line-tip">1¼″ SB</div>
+    <div class="chips"><span>325 GPM</span><span>FL 72</span><span>NP 50</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">122</span><span class="pdp-unit">PSI</span></div>
+</li></ul><p class='note'><span class='flag'>check</span> 2½″ 300′: quick reference shows FL 72; the FL table at 325 GPM (25 per 100′) gives 75. Verify against source.</p></div>
+</details><details class="sec">
+<summary><span class="num">3</span><span class="st"><span class="t">Non-CBR Lines — Pump Pressure</span><span class="s">Front bumper · standpipe · search line · 2″ KME</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><ul class="lines"><li class="line" data-gpm="60" data-fl="108" data-np="100" data-pdp="208" data-len="200">
+  <div class="line-main">
+    <div class="line-name">1″ search line <span class="len">200′</span></div>
+    <div class="line-tip">60 GPM @ 100 PSI</div>
+    <div class="chips"><span>60 GPM</span><span>FL 108</span><span>NP 100</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">208</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="205" data-fl="124" data-np="60" data-pdp="184" data-len="200">
+  <div class="line-main">
+    <div class="line-name">1¾″ <span class="len">200′</span></div>
+    <div class="line-tip">Vortex 15/16″ SB</div>
+    <div class="chips"><span>205 GPM</span><span>FL 124</span><span>NP 60</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">184</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="200" data-fl="125" data-np="100" data-pdp="225" data-len="200">
+  <div class="line-main">
+    <div class="line-name">1¾″ <span class="len">200′</span></div>
+    <div class="line-tip">Auto Fog (TFT)</div>
+    <div class="chips"><span>200 GPM</span><span>FL 125</span><span>NP 100</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">225</span><span class="pdp-unit">PSI</span></div>
+</li><li class="line" data-gpm="265" data-fl="114" data-np="50" data-pdp="164" data-len="300">
+  <div class="line-main">
+    <div class="line-name">2″ <span class="len">300′</span><span class='flag' title='FL on this quick-reference line does not match the friction loss table. Verify against the source.'>check</span></div>
+    <div class="line-tip">1⅛″ SB</div>
+    <div class="chips"><span>265 GPM</span><span>FL 114</span><span>NP 50</span></div>
+  </div>
+  <div class="pdp"><span class="pdp-num">164</span><span class="pdp-unit">PSI</span></div>
+</li></ul><p class='note'><span class='flag'>check</span> 2″ non-CBR 300′: FL 114 matches the CBR table (38 per 100′). The non-CBR FL table at 265 GPM (52 per 100′) gives 156. Verify against source.</p></div>
+</details><details class="sec">
+<summary><span class="num">4</span><span class="st"><span class="t">Friction Loss — CBR</span><span class="s">PSI per 100′ · by GPM</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><div class='tw'><table class='fl' data-kind='fl'><tr><th>GPM</th><th class='tipcol'>Tip</th><th>1¾″</th><th>2″</th></tr><tr><th scope='row'>125</th><td class='tipcol'></td><td>15</td><td>8</td></tr><tr><th scope='row'>175</th><td class='tipcol'>175 @ 75 PSI</td><td>20</td><td>16</td></tr><tr><th scope='row'>205</th><td class='tipcol'>15/16″ Vortex SB · 60 PSI</td><td>32</td><td>22</td></tr><tr><th scope='row'>225</th><td class='tipcol'></td><td>38</td><td>27</td></tr><tr><th scope='row'>250</th><td class='tipcol'></td><td>45</td><td>33</td></tr><tr><th scope='row'>265</th><td class='tipcol'>1⅛″ SB · 50 PSI</td><td>46</td><td>38</td></tr><tr><th scope='row'>275</th><td class='tipcol'></td><td class='na'>–</td><td>40</td></tr><tr><th scope='row'>300</th><td class='tipcol'></td><td class='na'>–</td><td>48</td></tr><tr><th scope='row'>325</th><td class='tipcol'>1¼″ SB · 50 PSI</td><td class='na'>–</td><td>52</td></tr></table></div></div>
+</details><details class="sec">
+<summary><span class="num">5</span><span class="st"><span class="t">Friction Loss — Non-CBR</span><span class="s">PSI per 100′ · bumper, standpipe, search line, 2″ KME, 2½″</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><p class='callout'><b>1″ search line:</b> 60 GPM = 54 PSI per 100′ (NP 100)</p><div class='tw'><table class='fl' data-kind='fl'><tr><th>GPM</th><th>1¾″</th><th>2″</th><th>2½″</th></tr><tr><th scope='row'>125</th><td>20</td><td>13</td><td>4</td></tr><tr><th scope='row'>175</th><td>38</td><td>25</td><td>8</td></tr><tr><th scope='row'>205</th><td>62</td><td>35</td><td>10</td></tr><tr><th scope='row'>225</th><td>75</td><td>40</td><td>12</td></tr><tr><th scope='row'>250</th><td>86</td><td>46</td><td>15</td></tr><tr><th scope='row'>265</th><td class='na'>–</td><td>52</td><td>17</td></tr><tr><th scope='row'>275</th><td class='na'>–</td><td>58</td><td>18</td></tr><tr><th scope='row'>300</th><td class='na'>–</td><td>70</td><td>20</td></tr><tr><th scope='row'>325</th><td class='na'>–</td><td>82</td><td>25</td></tr></table></div></div>
+</details><details class="sec">
+<summary><span class="num">6</span><span class="st"><span class="t">Nozzles &amp; Tip Flow</span><span class="s">Nozzle pressure · handline flow · master stream</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><h3>Nozzle pressure (NP)</h3><div class='tw'><table class='kv'><tr><td>TFT Vortex 15/16″ (SB)</td><td class='r'>60 PSI</td></tr><tr><td>SB handlines 1⅛″ &amp; 1½″ <span class='flag' title='Printed as 1½″ on the chart; the flow table lists 1¼″ at 50 PSI'>check</span></td><td class='r'>50 PSI</td></tr><tr><td>Elkart nozzles</td><td class='r'>75 PSI</td></tr><tr><td>1″ search line</td><td class='r'>100 PSI</td></tr><tr><td>Auto Fog (TFT)</td><td class='r'>100 PSI</td></tr><tr><td>SB master stream</td><td class='r'>100 PSI</td></tr></table></div><h3>Smoothbore handline flow</h3><div class='tw'><table class='kv'><tr><th>Tip</th><th class='r'>NP</th><th class='r'>Flow</th></tr><tr><td>15/16″ Vortex</td><td class='r'>60 PSI</td><td class='r'>205 GPM</td></tr><tr><td>1⅛″ tip</td><td class='r'>50 PSI</td><td class='r'>265 GPM</td></tr><tr><td>1¼″ tip</td><td class='r'>50 PSI</td><td class='r'>325 GPM</td></tr></table></div><h3>Master stream flow (GPM)</h3><div class='tw'><table class='fl'><tr><th>Tip</th><th>@ 80 PSI</th><th>@ 100 PSI</th></tr><tr><th scope='row'>1¼″</th><td>415</td><td>465</td></tr><tr><th scope='row'>1⅜″</th><td>500</td><td>560</td></tr><tr><th scope='row'>1½″</th><td>600</td><td>670</td></tr><tr><th scope='row'>1¾″</th><td>815</td><td>910</td></tr><tr><th scope='row'>2″</th><td>1065</td><td>1190</td></tr><tr><th scope='row'>2¼″</th><td>1350</td><td>1500</td></tr></table></div></div>
+</details><details class="sec">
+<summary><span class="num">7</span><span class="st"><span class="t">PDP Formula &amp; Constants</span><span class="s">Appliance loss · elevation · relay · standpipe</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><p class='callout formula'><b>PDP = NP + FL + Appliance Loss ± Elevation</b><br>Elevation: 5 PSI per floor (after 1st floor)</p><h3>Appliance loss</h3><div class='tw'><table class='kv'><tr><td class='big'>10 PSI</td><td>Gated wye (over 350 GPM)</td></tr><tr><td class='big'>15 PSI</td><td>Mounted master stream</td></tr><tr><td class='big'>25 PSI</td><td>Portable master stream</td></tr><tr><td class='big'>40 PSI</td><td>Aerial master stream</td></tr></table></div><h3>Miscellaneous constants</h3><div class='tw'><table class='kv'><tr><td>Relay constant</td><td class='r'>20 PSI + FL</td></tr><tr><td>Sprinkler system</td><td class='r'>150 PSI</td></tr><tr><td>Standpipe</td><td class='r'>NP + FL ± EL + 25 PSI</td></tr></table></div></div>
+</details><details class="sec">
+<summary><span class="num">8</span><span class="st"><span class="t">Supply Line Friction Loss</span><span class="s">PSI per 100′ · by GPM</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><div class='tw'><table class='fl'><tr><th>GPM</th><th>2½″</th><th>4″</th><th>5″</th></tr><tr><th scope='row'>350</th><td>25</td><td>2</td><td class='na'>–</td></tr><tr><th scope='row'>410</th><td>37</td><td>2.5</td><td class='na'>–</td></tr><tr><th scope='row'>500</th><td>54</td><td>4</td><td>1</td></tr><tr><th scope='row'>600</th><td>78</td><td>6</td><td>2</td></tr><tr><th scope='row'>700</th><td>105</td><td>8</td><td>2</td></tr><tr><th scope='row'>800</th><td>136</td><td>10</td><td>3</td></tr><tr><th scope='row'>900</th><td class='na'>–</td><td>12</td><td>4</td></tr><tr><th scope='row'>1000</th><td class='na'>–</td><td>15</td><td>5</td></tr><tr><th scope='row'>1200</th><td class='na'>–</td><td>22</td><td>7</td></tr><tr><th scope='row'>1500</th><td class='na'>–</td><td>35</td><td>11</td></tr><tr><th scope='row'>2000</th><td class='na'>–</td><td>62</td><td>20</td></tr></table></div></div>
+</details><details class="sec">
+<summary><span class="num">9</span><span class="st"><span class="t">Foam</span><span class="s">Class A · Class B · foam lines</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><h3>Class A foam</h3><div class='tw'><table class='kv'><tr><td>Active firefighting</td><td class='r'>0.1%–0.3%</td></tr><tr><td>Salvage / overhaul</td><td class='r'>0.3%–0.5%</td></tr><tr><td>Exposure protection</td><td class='r'>0.5%–1%</td></tr></table></div><h3>Class B foam</h3><div class='tw'><table class='kv'><tr><td>Hydrocarbons – 3%</td><td class='r'>0.16 GPM per sq ft for 20 min</td></tr><tr><td>Polar solvents – 3%</td><td class='r'>0.26 GPM per sq ft for 20 min</td></tr></table></div><p class='callout'>Sq ft of spill × (0.16 or 0.26) × 20 = total gallons<br>Foam usage = total gallons × % of foam</p><h3>Foam lines</h3><p class='callout'>PDP = 200 PSI with eductor at the pump panel<br>PDP = 200 PSI + FL of hose if eductor is away from the pump panel</p></div>
+</details><details class="sec">
+<summary><span class="num">10</span><span class="st"><span class="t">Water Supply &amp; Volume</span><span class="s">Fire flow estimate · residual · hose volume</span></span><span class="chev" aria-hidden="true"></span></summary>
+<div class="body"><h3>Estimating fire flow</h3><p class='callout formula'><b>L × W ÷ 3</b> = GPM for 1 floor fully involved</p><h3>Available water flow (residual)</h3><div class='tw'><table class='kv'><tr><th>Residual PSI drop</th><th class='r'>Available flow</th></tr><tr><td>0–10%</td><td class='r'>3× original flow (GPM)</td></tr><tr><td>11–20%</td><td class='r'>2× original flow (GPM)</td></tr><tr><td>21–30%</td><td class='r'>1× original flow (GPM)</td></tr></table></div><h3>Hose volume</h3><div class='tw'><table class='kv'><tr><td>1¾″</td><td class='r'>12.5 gal per 100′</td></tr><tr><td>2″</td><td class='r'>16 gal per 100′</td></tr><tr><td>2½″</td><td class='r'>25.5 gal per 100′</td></tr><tr><td>4″</td><td class='r'>65 gal per 100′</td></tr></table></div></div>
+</details>
+<footer>Transcribed from the HHFD Hydraulics Chart. The printed chart is the authority. Items marked <span class="flag" style="margin-left:0">check</span> did not agree with each other on the chart.</footer>
+</main>
+<script>
+(function(){
+  var btn=document.getElementById('toggle');
+  var secs=Array.prototype.slice.call(document.querySelectorAll('details.sec'));
+  function allOpen(){return secs.every(function(d){return d.open;});}
+  function label(){btn.textContent=allOpen()?'Collapse all':'Expand all';}
+  btn.addEventListener('click',function(){var o=!allOpen();secs.forEach(function(d){d.open=o;});label();});
+  secs.forEach(function(d){d.addEventListener('toggle',label);});
+  label();
+})();
+</script>
+</body>
+</html>
